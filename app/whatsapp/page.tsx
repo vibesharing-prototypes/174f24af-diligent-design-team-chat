@@ -200,6 +200,31 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
     ],
     steps: [],
   },
+  {
+    id: "design",
+    name: "Design Leadership",
+    avatar: "DL",
+    avatarBg: "#ec4899",
+    isGroup: true,
+    members: "Chris Avore, Tami Evnin, Judit Kószó, Joe Garcia, Marzena Miszczak, Diligent AI, You",
+    lastSeen: "online",
+    preview: "Diligent AI: ✅ Fork created — design-review fork of Connected Compliance...",
+    previewDate: "2:39 PM",
+    messages: [
+      { from: "Chris Avore", text: "Quick sync — can we do a design consistency check across our product suite before the Q2 roadmap locks? I've had a few reports of inconsistent patterns.", time: "2:15 PM" },
+      { from: "bot", text: "I ran an audit across all Diligent apps this morning. One finding that needs design leadership attention:", time: "2:16 PM" },
+      { from: "bot", text: "⚠️ *Design system misalignment: Connected Compliance*\n\nConnected Compliance is out of sync with the current design system in several areas:\n\n• Primary navigation uses the old 2-level pattern (we moved to 3-level in Q4)\n• Form controls and inputs don’t use the shared component library\n• Spacing and typography tokens are inconsistent (mix of 8px and 6px grids)\n• Color usage in status indicators doesn’t match accessibility guidelines", time: "2:16 PM", card: { title: "Connected Compliance — Design Gaps", items: ["Navigation: legacy 2-level vs. design system 3-level", "Forms: custom controls instead of shared library", "Spacing/typography: 8px vs 6px grid, token drift", "Status colors: not aligned to a11y contrast requirements"] } },
+      { from: "bot", text: "@Marzena — this sits with your team. Can you have your team own bringing Connected Compliance back in line? I can export a full gap list and suggested fixes if that helps.", time: "2:17 PM" },
+      { from: "Tami Evnin", text: "Good catch. We should fix this before it spreads — other teams might copy the old patterns if we don’t.", time: "2:22 PM" },
+      { from: "Judit Kószó", text: "Agree. I can share the component library links and token docs with Marzena's team.", time: "2:28 PM" },
+      { from: "Joe Garcia", text: "Same on the nav spec — happy to walk through the 3-level pattern if needed.", time: "2:30 PM" },
+      { from: "Marzena Miszczak", text: "I'll pull in the team and get a plan by Friday. Can you send the full gap list, Diligent AI?", time: "2:34 PM" },
+      { from: "bot", text: "✅ I'll generate the gap list and suggested fixes and send them to you by end of day. I'll tag the Connected Compliance epic so it shows up in your design backlog.", time: "2:35 PM" },
+      { from: "Chris Avore", text: "@Diligent AI can you create a fork of Connected Compliance with the suggested fixes that we can review?", time: "2:38 PM" },
+      { from: "bot", text: "✅ *Fork created*\n\nI've created a design-review fork of Connected Compliance with the suggested fixes applied:\n\n• Navigation updated to 3-level pattern\n• Form controls swapped to shared component library\n• Spacing and typography aligned to 8px grid and current tokens\n• Status indicators updated to meet a11y contrast\n\nLink to the fork is in the Design Leadership channel. You can review and comment there — when you're happy with it, we can merge into the main branch.", time: "2:39 PM" },
+    ],
+    steps: [],
+  },
 ];
 
 const SENDER_COLORS = ["#e9a5ff", "#53bdeb", "#ffb74d", "#80cbc4", "#f48fb1", "#ce93d8", "#81d4fa"];
@@ -229,7 +254,7 @@ function Checkmarks({ read }: { read?: boolean }) {
 export default function WhatsAppPage() {
   const [activeChat, setActiveChat] = useState("compliance");
   const [conversations, setConversations] = useState<Conversation[]>(INITIAL_CONVERSATIONS);
-  const [stepIndex, setStepIndex] = useState<Record<string, number>>({ compliance: 0, risk: 0, team: 0, training: 0 });
+  const [stepIndex, setStepIndex] = useState<Record<string, number>>({ compliance: 0, risk: 0, team: 0, training: 0, design: 0 });
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -370,7 +395,7 @@ export default function WhatsAppPage() {
                 </div>
 
                 {chat.messages.map((msg, i) => {
-                  const isUser = msg.from === "user";
+                  const isUser = msg.from === "user" || msg.from === "Tami Evnin";
                   const isBot = msg.from === "bot";
                   const senderName = !isUser && !isBot ? msg.from : null;
                   const showSender = chat.isGroup && (senderName || isBot);
